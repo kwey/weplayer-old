@@ -11,7 +11,7 @@
     "prebuild": "rm -rf dist",
     "build": "webpack --env.gcc",
     "debug": "webpack --env.dev",
-    "dev": "webpack --hot --env.dev"
+    "dev": "webpack-dev-server --env.dev"
   },
   "author": "kwe",
   "license": "ISC",
@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/KWEY/zero#readme",
   "dependencies": {
-    "event-emitter": "^0.3.5"
+    "concat-typed-array": "^1.0.2",
+    "promise-polyfill": "^8.1.0"
   },
   "devDependencies": {
-    "@types/event-emitter": "^0.3.3",
     "@types/node": "^10.12.0",
     "@types/webpack": "^4.4.17",
     "ajv": "^6.5.4",
@@ -54,6 +54,7 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.23.0",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.1.10",
+    "worker-loader": "^2.0.0"
   }
 }
