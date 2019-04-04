@@ -1,9 +1,9 @@
-
 const ErrorTypes = {
     network: {
         code: 1,
         msg: '视频下载错误',
-        remark: '只要视频下载错误就使用此类型，无论是video本身的超时还是xhr的分段请求超时或者资源不存在'
+        remark:
+            '只要视频下载错误就使用此类型，无论是video本身的超时还是xhr的分段请求超时或者资源不存在'
     },
     mse: {
         code: 2,
@@ -13,7 +13,8 @@ const ErrorTypes = {
     parse: {
         code: 3,
         msg: '解析错误',
-        remark: 'mp4、hls、flv我们都是使用js进行格式解析，如果解析失败则会触发此类错误'
+        remark:
+            'mp4、hls、flv我们都是使用js进行格式解析，如果解析失败则会触发此类错误'
     },
     format: {
         code: 4,
@@ -43,8 +44,14 @@ const ErrorTypes = {
 }
 
 class Errors {
-
-    constructor(type: any, duration: any, networkState: any, readyState: any, src: any, errd = { line: '', handle: '', msg: '', version: '' }) {
+    constructor(
+        type: any,
+        duration: any,
+        networkState: any,
+        readyState: any,
+        src: any,
+        errd = { line: '', handle: '', msg: '', version: '' }
+    ) {
         const r: any = {}
         r.playerVersion = errd.version // 播放器版本
         r.errorType = type

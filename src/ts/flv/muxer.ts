@@ -13,10 +13,20 @@ export default class Muxer extends EventEmitter {
         }
         this.name = name
     }
-    emitError(type: any, errorDetail: any = { line: '', handle: '', msg: '', version: '' }) {
+    emitError(
+        type: any,
+        errorDetail: any = { line: '', handle: '', msg: '', version: '' }
+    ) {
         const { controller, state } = this.store
         if (controller) {
-            const errorToEmit = new Errors(type, state.duration, '', true, controller.config.url, errorDetail)
+            const errorToEmit = new Errors(
+                type,
+                state.duration,
+                '',
+                true,
+                controller.config.url,
+                errorDetail
+            )
             controller.emit('error', errorToEmit)
         }
     }

@@ -11,7 +11,7 @@ const {
     OBJECT_END,
     STRICT_ARRAY,
     DATE,
-    LONE_STRING,
+    LONE_STRING
 } = MetaTypes
 /**
  * meta信息解析
@@ -20,15 +20,15 @@ export default class MetaDemuxer extends Demuxer {
     offset: any
     readOffset: any
 
-    constructor (store: Store) {
+    constructor(store: Store) {
         super(store)
         this.offset = 0
         this.readOffset = this.offset
     }
-    get isLe () {
+    get isLe() {
         return this.store.isLe
     }
-    resolve (meta: any, size: number) {
+    resolve(meta: any, size: number) {
         if (size < 3) {
             console.log('not enough data for metainfo')
         }
@@ -41,17 +41,19 @@ export default class MetaDemuxer extends Demuxer {
         return metaData
     }
 
-    resetStatus () {
+    resetStatus() {
         this.offset = 0
         this.readOffset = this.offset
     }
 
-    parseString (buffer: any) {
+    parseString(buffer: any) {
         const dv = new DataView(buffer, this.readOffset)
         const strLen = dv.getUint16(0, !this.isLe)
         let str = ''
         if (strLen > 0) {
-            str = UTF8.decode(new Uint8Array(buffer, this.readOffset + 2, strLen))
+            str = UTF8.decode(
+                new Uint8Array(buffer, this.readOffset + 2, strLen)
+            )
         } else {
             str = ''
         }
@@ -59,11 +61,11 @@ export default class MetaDemuxer extends Demuxer {
         this.readOffset += size
         return {
             data: str,
-            bodySize: strLen + 2,
+            bodySize: strLen + 2
         }
     }
 
-    parseDate (buffer: any, size: any) {
+    parseDate(buffer: any, size: any) {
         const { isLe } = this
         const dv = new DataView(buffer, this.readOffset, size)
         let ts = dv.getFloat64(0, !isLe)
@@ -73,35 +75,37 @@ export default class MetaDemuxer extends Demuxer {
         this.readOffset += 10
         return {
             data: new Date(ts),
-            bodySize: 10,
+            bodySize: 10
         }
     }
 
-    parseObject (buffer: any, size: any): any {
+    parseObject(buffer: any, size: any): any {
         const name = this.parseString(buffer)
         const value = this.parseValue(buffer, size - name.bodySize)
         return {
             data: {
                 name: name.data,
-                value: value.data,
+                value: value.data
             },
             bodySize: name.bodySize + value.bodySize,
-            isObjEnd: value.isObjEnd,
+            isObjEnd: value.isObjEnd
         }
     }
 
-    parseLongString (buffer: any) {
+    parseLongString(buffer: any) {
         const dv = new DataView(buffer, this.readOffset)
         const strLen = dv.getUint32(0, !this.isLe)
         let str = ''
         if (strLen > 0) {
-            str = UTF8.decode(new Uint8Array(buffer, this.readOffset + 2, strLen))
+            str = UTF8.decode(
+                new Uint8Array(buffer, this.readOffset + 2, strLen)
+            )
         }
         // const size = strLen + 4
         this.readOffset += strLen + 4
         return {
             data: str,
-            bodySize: strLen + 4,
+            bodySize: strLen + 4
         }
     }
 
@@ -146,18 +150,24 @@ export default class MetaDemuxer extends Demuxer {
             case OBJECT: {
                 value = {}
                 let objEndSize = 0
-                if (dataView.getUint32(size - 4, !isLe) & 0x00FFFFFF) {
+                if (dataView.getUint32(size - 4, !isLe) & 0x00ffffff) {
                     objEndSize = 3
                 }
                 // this.readOffset += offset - 1
                 while (offset < size - 4) {
-                    const amfObj = this.parseObject(buffer, size - offset - objEndSize)
-                    if (amfObj.isObjectEnd) { break }
+                    const amfObj = this.parseObject(
+                        buffer,
+                        size - offset - objEndSize
+                    )
+                    if (amfObj.isObjectEnd) {
+                        break
+                    }
                     value[amfObj.data.name] = amfObj.data.value
                     offset += amfObj.bodySize
                 }
                 if (offset <= size - 3) {
-                    const mark = dataView.getUint32(offset - 1, !isLe) & 0x00FFFFFF
+                    const mark =
+                        dataView.getUint32(offset - 1, !isLe) & 0x00ffffff
                     if (mark === 9) {
                         this.readOffset += 3
                         offset += 3
@@ -170,17 +180,23 @@ export default class MetaDemuxer extends Demuxer {
                 offset += 4
                 this.readOffset += 4
                 let objEndSize = 0
-                if ((dataView.getUint32(size - 4, !isLe) & 0x00FFFFFF) === 9) {
+                if ((dataView.getUint32(size - 4, !isLe) & 0x00ffffff) === 9) {
                     objEndSize = 3
                 }
                 while (offset < size - 8) {
-                    const amfVar = this.parseObject(buffer, size - offset - objEndSize)
-                    if (amfVar.isObjectEnd) { break }
+                    const amfVar = this.parseObject(
+                        buffer,
+                        size - offset - objEndSize
+                    )
+                    if (amfVar.isObjectEnd) {
+                        break
+                    }
                     value[amfVar.data.name] = amfVar.data.value
                     offset += amfVar.bodySize
                 }
                 if (offset <= size - 3) {
-                    const marker = dataView.getUint32(offset - 1, !isLe) & 0x00FFFFFF
+                    const marker =
+                        dataView.getUint32(offset - 1, !isLe) & 0x00ffffff
                     if (marker === 9) {
                         offset += 3
                         this.readOffset += 3
@@ -199,7 +215,6 @@ export default class MetaDemuxer extends Demuxer {
                 offset += 4
                 this.readOffset += 4
                 for (let i = 0; i < arrLength; i++) {
-
                     const script = this.parseValue(buffer, size - offset)
                     value.push(script.data)
                     offset += script.bodySize
@@ -225,9 +240,7 @@ export default class MetaDemuxer extends Demuxer {
         return {
             isObjEnd,
             data: value,
-            bodySize: offset,
+            bodySize: offset
         }
     }
-
 }
-

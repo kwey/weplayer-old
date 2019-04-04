@@ -1,4 +1,3 @@
-
 export default class MediaInfo {
     mimeType: any = null
     codec: string = ''
@@ -28,26 +27,31 @@ export default class MediaInfo {
     hasKeyframes: any = null
     keyframes: any = []
 
-    get isComplete () {
+    get isComplete() {
         const { mimeType, duration, hasKeyframes } = this
-        return mimeType !== null
-            && duration !== null
-            && hasKeyframes !== null
-            && this.isVideoInfoFilled
-            && this.isAudioInfoFilled
+        return (
+            mimeType !== null &&
+            duration !== null &&
+            hasKeyframes !== null &&
+            this.isVideoInfoFilled &&
+            this.isAudioInfoFilled
+        )
     }
-    get isAudioInfoFilled () {
-        const { hasAudio,
+    get isAudioInfoFilled() {
+        const {
+            hasAudio,
             audioCodec,
             audioSampleRate,
-            audioChannelCount,
+            audioChannelCount
         } = this
 
-        return !!(!hasAudio || (hasAudio && audioCodec && audioSampleRate && audioChannelCount))
-
+        return !!(
+            !hasAudio ||
+            (hasAudio && audioCodec && audioSampleRate && audioChannelCount)
+        )
     }
 
-    get isVideoInfoFilled () {
+    get isVideoInfoFilled() {
         const notNullFields = [
             'videoCodec',
             'width',
@@ -55,13 +59,14 @@ export default class MediaInfo {
             'fps',
             'profile',
             'level',
-            'chromaFormat',
+            'chromaFormat'
         ]
         for (let i = 0, len = notNullFields.length; i < len; i++) {
-            if (this[notNullFields[i]] === null) { return false }
+            if (this[notNullFields[i]] === null) {
+                return false
+            }
         }
 
         return this.hasVideo
     }
-
 }

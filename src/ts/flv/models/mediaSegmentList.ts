@@ -40,8 +40,11 @@ export default class MediaSegmentList {
 
         while (lbound <= ubound) {
             mid = lbound + Math.floor((ubound - lbound) / 2)
-            if (mid === last || (beginDts > list[mid].lastSample.originDts
-                    && (beginDts < list[mid + 1].originDts))) {
+            if (
+                mid === last ||
+                (beginDts > list[mid].lastSample.originDts &&
+                    beginDts < list[mid + 1].originDts)
+            ) {
                 idx = mid
                 break
             } else if (list[mid].originDts < beginDts) {
@@ -60,15 +63,21 @@ export default class MediaSegmentList {
         const lastAppendIdx = this._lastAppendLocation
         let insertIdx = 0
 
-        if (lastAppendIdx !== -1 && lastAppendIdx < list.length
-            && segment.originStartDts >= list[lastAppendIdx].lastSample.originDts
-            && ((lastAppendIdx === list.length - 1)
-                || (lastAppendIdx < list.length - 1
-                    && segment.originStartDts < list[lastAppendIdx + 1].originStartDts))) {
+        if (
+            lastAppendIdx !== -1 &&
+            lastAppendIdx < list.length &&
+            segment.originStartDts >=
+                list[lastAppendIdx].lastSample.originDts &&
+            (lastAppendIdx === list.length - 1 ||
+                (lastAppendIdx < list.length - 1 &&
+                    segment.originStartDts <
+                        list[lastAppendIdx + 1].originStartDts))
+        ) {
             insertIdx = lastAppendIdx + 1 // use cached location idx
         } else {
             if (list.length > 0) {
-                insertIdx = this._searchNearestSegmentBefore(segment.originStartDts) + 1
+                insertIdx =
+                    this._searchNearestSegmentBefore(segment.originStartDts) + 1
             }
         }
         this._lastAppendLocation = insertIdx
@@ -78,7 +87,8 @@ export default class MediaSegmentList {
         const idx = this._searchNearestSegmentBefore(beginDts)
         if (idx >= 0) {
             return this._list[idx]
-        } else { // -1
+        } else {
+            // -1
             return null
         }
     }
@@ -104,5 +114,4 @@ export default class MediaSegmentList {
             return null
         }
     }
-
 }

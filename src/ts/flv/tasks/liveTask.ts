@@ -33,7 +33,7 @@ class LiveTask {
         const prom = new Promise((resolve, reject) => {
             let isTimeout = true
 
-            fetch(this.request).then((res) => {
+            fetch(this.request).then(res => {
                 isTimeout = false
                 resolve(res)
             })
@@ -42,14 +42,12 @@ class LiveTask {
             }, 5000)
         })
 
-        prom
-            .then((res: any) => {
-                const reader = res.body.getReader()
-                resolve(reader)
-            })
-            .catch(err => {
-                callback(err)
-            })
+        prom.then((res: any) => {
+            const reader = res.body.getReader()
+            resolve(reader)
+        }).catch(err => {
+            callback(err)
+        })
 
         return this
     }

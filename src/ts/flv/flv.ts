@@ -82,7 +82,10 @@ class FlvPlayer extends EventEmitter {
     }
     load() {
         this._worker = new Workers()
-        this._worker.postMessage({ sign: WorkerEvents.INIT, config: this.config })
+        this._worker.postMessage({
+            sign: WorkerEvents.INIT,
+            config: this.config
+        })
         this._worker.onmessage = (message: any) => {
             this._onWorkerMessage(message)
         }
@@ -100,9 +103,7 @@ class FlvPlayer extends EventEmitter {
         this.video.appendBuffer(ftypMoov.buffer)
         this._mediaInfo = ftypMoov
     }
-    isEnded() {
-
-    }
+    isEnded() {}
     _onWorkerMessage(event: any) {
         const message = event.data
         const data = message.data

@@ -1,4 +1,3 @@
-
 export interface DataInterface {
     name: string
     version: string

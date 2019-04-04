@@ -1,4 +1,3 @@
-
 import { ConfigInterface } from '../../..'
 import { Events } from '../events'
 import { TimeUpdateInterface } from '../video'
@@ -68,33 +67,36 @@ class Controller extends EventEmitter {
     load() {
         this.range = {
             start: this.range.start + 1,
-            end: this.range.end + this.META_CHUNK_SIZE,
+            end: this.range.end + this.META_CHUNK_SIZE
         }
         return this.loadData()
     }
     loadData() {
-        return this.loadMetaData().then((data: any) => {
-            this.rangeList.push([this.range.start, this.range.end])
-            this.resolver(data)
-        }).catch((e: any) => {
-            console.log(e)
-            if (this.err_cnt >= 3) {
-                this.emit('error', e)
-                return
-            }
-            this.err_cnt += 1
-            this.loadData()
-        })
+        return this.loadMetaData()
+            .then((data: any) => {
+                this.rangeList.push([this.range.start, this.range.end])
+                this.resolver(data)
+            })
+            .catch((e: any) => {
+                console.log(e)
+                if (this.err_cnt >= 3) {
+                    this.emit('error', e)
+                    return
+                }
+                this.err_cnt += 1
+                this.loadData()
+            })
     }
     loadMetaData() {
-        const {
-            start = 0,
-            end = start + this.META_CHUNK_SIZE
-        } = this.range
+        const { start = 0, end = start + this.META_CHUNK_SIZE } = this.range
         if (start > end) {
             return Promise.reject('')
         }
-        this.loadTask = new VodTask(this.config.url, [start, end], this.requestConfig)
+        this.loadTask = new VodTask(
+            this.config.url,
+            [start, end],
+            this.requestConfig
+        )
         return this.loadTask.promise
     }
     resolver(data: any) {
@@ -115,7 +117,10 @@ class Controller extends EventEmitter {
             if (tags[0].tagType !== 18) {
                 throw new Error('flv file without metadata tag')
             }
-            if (this._tempBaseTime !== 0 && this._tempBaseTime === tags[0].getTime()) {
+            if (
+                this._tempBaseTime !== 0 &&
+                this._tempBaseTime === tags[0].getTime()
+            ) {
                 this.store.state._timestampBase = 0
             }
             this.tagDemuxer.resolveTags()
@@ -160,7 +165,7 @@ class Controller extends EventEmitter {
         this.mp4remuxer.mediaFragment = this.newMediaFragment.bind(this)
     }
     unbindEvents() {
-        const NOOP = () => { }
+        const NOOP = () => {}
         this.tagDemuxer.dataReady = NOOP
         this.tagDemuxer.mediaInfoReady = NOOP
         this.tagDemuxer.metaDataReady = NOOP
@@ -173,7 +178,9 @@ class Controller extends EventEmitter {
             const { duration, timeScale } = this.store.mediaInfo
             const range = data.range || [0, 0]
             const currentTime = data.currentTime || 0
-            if (duration - range[1] * timeScale < 0.1 * timeScale) { return }
+            if (duration - range[1] * timeScale < 0.1 * timeScale) {
+                return
+            }
             if (range[1] - currentTime < minCachedTime && !this.isDataLoading) {
                 this.isDataLoading = true
                 this.getNextRange(currentTime, preloadTime)
@@ -188,17 +195,19 @@ class Controller extends EventEmitter {
         const loadData = () => {
             if (this.stop) return Promise.reject()
 
-            return this.loadMetaData().then((data: any) => {
-                this.rangeList.push([this.range.start, this.range.end])
-                this.resolveChunk(data)
-            }).catch(() => {
-                if (this.err_cnt >= 3) {
-                    this.emit(Events.ERROR, '加载视频失败')
-                    return
-                }
-                this.err_cnt += 1
-                loadData()
-            })
+            return this.loadMetaData()
+                .then((data: any) => {
+                    this.rangeList.push([this.range.start, this.range.end])
+                    this.resolveChunk(data)
+                })
+                .catch(() => {
+                    if (this.err_cnt >= 3) {
+                        this.emit(Events.ERROR, '加载视频失败')
+                        return
+                    }
+                    this.err_cnt += 1
+                    loadData()
+                })
         }
         return loadData()
     }
@@ -239,10 +248,13 @@ class Controller extends EventEmitter {
         }
     }
     getNextRange(currentTime: number, preloadTime: number) {
-        const { keyframes: { times, filePositions }, videoTimeScale } = this.store
+        const {
+            keyframes: { times, filePositions },
+            videoTimeScale
+        } = this.store
         const start = videoTimeScale * currentTime
         // const { start, end } = this.findPosition(seekStart)
-        let end = start + (preloadTime * videoTimeScale)
+        let end = start + preloadTime * videoTimeScale
         if (end > times[times.length - 1]) {
             end = filePositions[filePositions.length - 1]
         }
@@ -307,7 +319,10 @@ class Controller extends EventEmitter {
     }
     findPosition(current: number): any {
         const { keyframes = {}, videoTimeScale } = this.store
-        const length = Math.min(keyframes.filePositions.length, keyframes.times.length)
+        const length = Math.min(
+            keyframes.filePositions.length,
+            keyframes.times.length
+        )
         let { preloadTime } = this.config
         let low = 0
         let hight = length - 1

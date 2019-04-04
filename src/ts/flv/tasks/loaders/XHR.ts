@@ -1,4 +1,3 @@
-
 export default class XHRLoader {
     url: string
     _xhr: any
@@ -21,7 +20,7 @@ export default class XHRLoader {
                     resolve(xhr.response)
                 }
             }
-            xhr.onerror = (e) => {
+            xhr.onerror = e => {
                 reject(e)
             }
         })
@@ -44,5 +43,4 @@ export default class XHRLoader {
     cancel() {
         this._xhr.abort()
     }
-
 }

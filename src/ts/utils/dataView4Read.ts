@@ -4,7 +4,7 @@ export default class DataView4Read {
     isLe: boolean
     sizeArr: any
 
-    constructor (buffer: any, context: any) {
+    constructor(buffer: any, context: any) {
         this._dv = new DataView(buffer)
         this._context = context
         this.isLe = !context.store.isLe
@@ -16,7 +16,9 @@ export default class DataView4Read {
      */
     getUint8(data?: number) {
         let offset = data
-        if (!offset) { offset = this._context.readOffset }
+        if (!offset) {
+            offset = this._context.readOffset
+        }
         if (offset === this._context.readOffset) {
             this._context.readOffset += 1
         }
@@ -27,7 +29,9 @@ export default class DataView4Read {
      */
     getUint16(data?: number) {
         let offset = data
-        if (!offset) { offset = this._context.readOffset }
+        if (!offset) {
+            offset = this._context.readOffset
+        }
         if (offset === this._context.readOffset) {
             this._context.readOffset += 2
         }
@@ -38,7 +42,9 @@ export default class DataView4Read {
      */
     getUint32(data?: number) {
         let offset = data
-        if (!offset) { offset = this._context.readOffset }
+        if (!offset) {
+            offset = this._context.readOffset
+        }
         if (offset === this._context.readOffset) {
             this._context.readOffset += 4
         }
@@ -66,14 +72,16 @@ export default class DataView4Read {
                 }
             }
 
-            const numToAnd = isHigh ? DataView4Read.getAndNum(0, size - 1, readSize) : DataView4Read.getAndNum(readSize - size, readSize - 1, readSize)
+            const numToAnd = isHigh
+                ? DataView4Read.getAndNum(0, size - 1, readSize)
+                : DataView4Read.getAndNum(readSize - size, readSize - 1, readSize)
             return this[`getUint${readSize}`](offset, this.isLe) & numToAnd
         } else {
             return this[`getUint${readSize}`](offset, this.isLe)
         }
     }
 
-    static getAndNum (begin: number, end: number, s = 8) {
+    static getAndNum(begin: number, end: number, s = 8) {
         let result = 0
         let size = s
         let index = --size

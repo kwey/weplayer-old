@@ -1,4 +1,3 @@
-
 interface EventsInterface {
     [key: string]: Function[]
 }

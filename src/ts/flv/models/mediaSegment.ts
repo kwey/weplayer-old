@@ -10,7 +10,7 @@ export default class MediaSegment {
     lastSample: any
     gap: any
 
-    constructor () {
+    constructor() {
         this.startDts = -1
         this.endDts = -1
         this.startPts = -1
@@ -22,7 +22,7 @@ export default class MediaSegment {
         this.lastSample = null
     }
 
-    addRAP (sample: any) {
+    addRAP(sample: any) {
         sample.isRAP = true
         this.randomAccessPoints.push(sample)
     }

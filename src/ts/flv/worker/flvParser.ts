@@ -43,7 +43,7 @@ export default class FlvParse {
         this.stop = false
         this.index = 0
         this.offset = 0
-        const tempU8a = this.temp_u8a = flvU8a
+        const tempU8a = (this.temp_u8a = flvU8a)
         this.dataLen = this.temp_u8a.length
 
         if (!this.firstFlag) {
@@ -117,7 +117,7 @@ export default class FlvParse {
             return result
         }
         const flag = temp_u8a[4]
-        const hasAudio = ((flag & 4) >>> 2) !== 0
+        const hasAudio = (flag & 4) >>> 2 !== 0
         const hasVideo = (flag & 1) !== 0
 
         if (!hasAudio && !hasVideo) {

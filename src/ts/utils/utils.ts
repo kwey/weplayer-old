@@ -27,9 +27,12 @@ export default {
 
     addClass(el: HTMLElement, className: string) {
         if (el.classList) {
-            className.replace(/(^\s+|\s+$)/g, '').split(/\s+/g).forEach(item => {
-                item && el.classList.add(item)
-            })
+            className
+                .replace(/(^\s+|\s+$)/g, '')
+                .split(/\s+/g)
+                .forEach(item => {
+                    item && el.classList.add(item)
+                })
         } else if (!this.hasClass(el, className)) {
             el.className += ' ' + className
         }
@@ -80,7 +83,7 @@ export default {
         }
         const hour = this.padStart(Math.floor(time / 3600), 2, 0)
         const minute = this.padStart(Math.floor((time - hour * 3600) / 60), 2, 0)
-        const second = this.padStart(Math.floor((time - hour * 3600 - minute * 60)), 2, 0)
+        const second = this.padStart(Math.floor(time - hour * 3600 - minute * 60), 2, 0)
         return (hour === '00' ? [minute, second] : [hour, minute, second]).join(':')
     },
 
@@ -109,7 +112,8 @@ export default {
                         this.deepCopy(dst[key], src[key])
                     }
                 } else if (this.typeOf(src[key]) === 'Array') {
-                    dst[key] = this.typeOf(dst[key]) === 'Array' ? dst[key].concat(src[key]) : src[key]
+                    dst[key] =
+                        this.typeOf(dst[key]) === 'Array' ? dst[key].concat(src[key]) : src[key]
                 } else {
                     dst[key] = src[key]
                 }
@@ -173,5 +177,4 @@ export default {
             }
         }
     }
-
 }

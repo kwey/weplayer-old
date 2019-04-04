@@ -1,11 +1,10 @@
-
 export default class ExpGolomb {
     data: any
     bytesAvailable: any
     word: any
     bitsAvailable: any
 
-    constructor (data: any) {
+    constructor(data: any) {
         this.data = data
         // the number of bytes left to examine in this.data
         this.bytesAvailable = data.byteLength
@@ -15,7 +14,7 @@ export default class ExpGolomb {
         this.bitsAvailable = 0 // :uint
     }
     // ():void
-    loadWord () {
+    loadWord() {
         const data = this.data
         const bytesAvailable = this.bytesAvailable
         const position = data.byteLength - bytesAvailable
@@ -32,7 +31,7 @@ export default class ExpGolomb {
     }
 
     // (count:int):void
-    skipBits (c: any) {
+    skipBits(c: any) {
         let skipBytes
         let count = c
         if (this.bitsAvailable > count) {
@@ -41,7 +40,7 @@ export default class ExpGolomb {
         } else {
             count -= this.bitsAvailable
             skipBytes = count >> 3
-            count -= (skipBytes >> 3)
+            count -= skipBytes >> 3
             this.bytesAvailable -= skipBytes
             this.loadWord()
             this.word <<= count
@@ -65,7 +64,7 @@ export default class ExpGolomb {
         }
         bits = size - bits
         if (bits > 0 && this.bitsAvailable) {
-            return valu << bits | this.readBits(bits)
+            return (valu << bits) | this.readBits(bits)
         } else {
             return valu
         }
@@ -88,23 +87,23 @@ export default class ExpGolomb {
     }
 
     // ():void
-    skipUEG () {
+    skipUEG() {
         this.skipBits(1 + this.skipLZ())
     }
 
     // ():void
-    skipEG () {
+    skipEG() {
         this.skipBits(1 + this.skipLZ())
     }
 
     // ():uint
-    readUEG () {
+    readUEG() {
         const clz = this.skipLZ() // :uint
         return this.readBits(clz + 1) - 1
     }
 
     // ():int
-    readEG () {
+    readEG() {
         const valu = this.readUEG() // :int
         if (0x01 & valu) {
             // the number is odd if the low order bit is set
@@ -116,21 +115,21 @@ export default class ExpGolomb {
 
     // Some convenience functions
     // :Boolean
-    readBoolean () {
+    readBoolean() {
         return 1 === this.readBits(1)
     }
 
     // ():int
-    readUByte () {
+    readUByte() {
         return this.readBits(8)
     }
 
     // ():int
-    readUShort () {
+    readUShort() {
         return this.readBits(16)
     }
     // ():int
-    readUInt () {
+    readUInt() {
         return this.readBits(32)
     }
 
@@ -141,7 +140,7 @@ export default class ExpGolomb {
      * @param count  the number of entries in this scaling list
      * @see Recommendation ITU-T H.264, Section 7.3.2.1.1.1
      */
-    skipScalingList (count: any) {
+    skipScalingList(count: any) {
         let lastScale = 8
         let nextScale = 8
         let j
@@ -151,9 +150,7 @@ export default class ExpGolomb {
                 deltaScale = this.readEG()
                 nextScale = (lastScale + deltaScale + 256) % 256
             }
-            lastScale = (nextScale === 0)
-                ? lastScale
-                : nextScale
+            lastScale = nextScale === 0 ? lastScale : nextScale
         }
     }
 
@@ -166,7 +163,7 @@ export default class ExpGolomb {
      * sequence parameter set, including the dimensions of the
      * associated video frames.
      */
-    readSPS (): any {
+    readSPS(): any {
         let frameCropLeftOffset = 0
         let frameCropRightOffset = 0
         let frameCropTopOffset = 0
@@ -214,12 +211,12 @@ export default class ExpGolomb {
             bitDepthLuma = readUEG() + 8 // bit_depth_luma_minus8
             skipUEG() // bit_depth_chroma_minus8
             skipBits(1) // qpprime_y_zero_transform_bypass_flag
-            if (readBoolean()) { // seq_scaling_matrix_present_flag
-                scalingListCount = (chromaFormatIdc !== 3)
-                    ? 8
-                    : 12
+            if (readBoolean()) {
+                // seq_scaling_matrix_present_flag
+                scalingListCount = chromaFormatIdc !== 3 ? 8 : 12
                 for (i = 0; i < scalingListCount; i++) {
-                    if (readBoolean()) { // seq_scaling_list_present_flag[ i ]
+                    if (readBoolean()) {
+                        // seq_scaling_list_present_flag[ i ]
                         i < 6 ? skipScalingList(16) : skipScalingList(64)
                     }
                 }
@@ -247,7 +244,8 @@ export default class ExpGolomb {
             skipBits(1) // mb_adaptive_frame_field_flag
         }
         skipBits(1) // direct_8x8_inference_flag
-        if (readBoolean()) { // frame_cropping_flag
+        if (readBoolean()) {
+            // frame_cropping_flag
             frameCropLeftOffset = readUEG()
             frameCropRightOffset = readUEG()
             frameCropTopOffset = readUEG()
@@ -257,7 +255,7 @@ export default class ExpGolomb {
             fps: 0,
             fpsFixed: true,
             fpsNum: 0,
-            fpsDen: 0,
+            fpsDen: 0
         }
         let pixelRatio = [1, 1]
         if (readBoolean()) {
@@ -314,33 +312,37 @@ export default class ExpGolomb {
                     case 16:
                         pixelRatio = [2, 1]
                         break
-                    case 255:
-                    {
+                    case 255: {
                         pixelRatio = [
-                            readUByte() << 8 | readUByte(),
-                            readUByte() << 8 | readUByte(),
+                            (readUByte() << 8) | readUByte(),
+                            (readUByte() << 8) | readUByte()
                         ]
                         break
                     }
                 }
             }
-            if (readBoolean()) { // overscan_info_present_flag
+            if (readBoolean()) {
+                // overscan_info_present_flag
                 readBoolean() // overscan_appropriate_flag
             }
-            if (readBoolean()) { // video_signal_type_present_flag
+            if (readBoolean()) {
+                // video_signal_type_present_flag
                 readBits(4) // video_format & video_full_range_flag
-                if (readBoolean()) { // colour_description_present_flag
+                if (readBoolean()) {
+                    // colour_description_present_flag
                     readBits(24) // colour_primaries & transfer_characteristics & matrix_coefficients
                 }
             }
-            if (readBoolean()) { // chroma_loc_info_present_flag
+            if (readBoolean()) {
+                // chroma_loc_info_present_flag
                 readUEG() // chroma_sample_loc_type_top_field
                 readUEG() // chroma_sample_loc_type_bottom_field
             }
 
-            if (readBoolean()) { // timing_info_present_flag
-                const numUnitInTick = (readBits(32))
-                frameRate.fpsNum = (readBits(32))
+            if (readBoolean()) {
+                // timing_info_present_flag
+                const numUnitInTick = readBits(32)
+                frameRate.fpsNum = readBits(32)
                 frameRate.fixed = this.readBoolean()
                 frameRate.fpsDen = numUnitInTick * 2
                 frameRate.fps = frameRate.fpsNum / frameRate.fpsDen
@@ -363,9 +365,8 @@ export default class ExpGolomb {
             codecWidth -= (frameCropLeftOffset + frameCropRightOffset) * cropUnitX
             codecHeight -= (frameCropTopOffset + frameCropBottomOffset) * cropUnitY
 
-            const pixelScale = pixelRatio[0] === 1 || pixelRatio[1] === 1
-                ? 1
-                : pixelRatio[0] / pixelRatio[1]
+            const pixelScale =
+                pixelRatio[0] === 1 || pixelRatio[1] === 1 ? 1 : pixelRatio[0] / pixelRatio[1]
 
             presentWidth = pixelScale * codecWidth
         }
@@ -378,22 +379,23 @@ export default class ExpGolomb {
             frameRate,
             codecSize: {
                 width: codecWidth,
-                height: codecHeight,
+                height: codecHeight
             },
             presentSize: {
                 width: presentWidth,
-                height: codecHeight,
+                height: codecHeight
             },
-            width: Math.ceil((((picWidthInMbsMinus1 + 1) * 16) - frameCropLeftOffset * 2 - frameCropRightOffset * 2)),
-            height: ((2 - frameMbsOnlyFlag) * (picHeightInMapUnitsMinus1 + 1) * 16) - ((
-                frameMbsOnlyFlag
-                    ? 2
-                    : 4) * (frameCropTopOffset + frameCropBottomOffset)),
-            pixelRatio,
+            width: Math.ceil(
+                (picWidthInMbsMinus1 + 1) * 16 - frameCropLeftOffset * 2 - frameCropRightOffset * 2
+            ),
+            height:
+                (2 - frameMbsOnlyFlag) * (picHeightInMapUnitsMinus1 + 1) * 16 -
+                (frameMbsOnlyFlag ? 2 : 4) * (frameCropTopOffset + frameCropBottomOffset),
+            pixelRatio
         }
     }
 
-    readSliceType () {
+    readSliceType() {
         // skip NALu type
         this.readUByte()
         // discard first_mb_in_slice

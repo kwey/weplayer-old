@@ -16,19 +16,28 @@ ctx.addEventListener('message', (event: any) => {
             controller.on(Events.INIT_SEGMENT, onInitSegment.bind(this))
             controller.on(Events.MEDIA_SEGMENT, onMediaSegment.bind(this))
             controller.on(Events.LOADING_COMPLETE, onLoadingComplete.bind(this))
-            controller.on(Events.RECOVERED_EARLY_EOF, onRecoveredEarlyEof.bind(this))
+            controller.on(
+                Events.RECOVERED_EARLY_EOF,
+                onRecoveredEarlyEof.bind(this)
+            )
             controller.on(Events.MEDIA_INFO, onMediaInfo.bind(this))
             controller.on(Events.METADATA_ARRIVED, onMetaDataArrived.bind(this))
-            controller.on(Events.SCRIPTDATA_ARRIVED, onScriptDataArrived.bind(this))
+            controller.on(
+                Events.SCRIPTDATA_ARRIVED,
+                onScriptDataArrived.bind(this)
+            )
             controller.on(Events.STATISTICS_INFO, onStatisticsInfo.bind(this))
-            controller.on(Events.RECOMMEND_SEEKPOINT, onRecommendSeekpoint.bind(this))
+            controller.on(
+                Events.RECOMMEND_SEEKPOINT,
+                onRecommendSeekpoint.bind(this)
+            )
             break
         case 'destroy':
             if (controller) {
                 controller.destroy()
                 controller = null
             }
-            ctx.postMessage({msg: 'destroyed'})
+            ctx.postMessage({ msg: 'destroyed' })
             break
         case 'seek':
             controller.seek(event.data.param)
@@ -61,9 +70,9 @@ ctx.addEventListener('message', (event: any) => {
 function onInitSegment(initSegment: any) {
     const obj: any = {
         msg: Events.INIT_SEGMENT,
-        data:  initSegment
+        data: initSegment
     }
-    ctx.postMessage(obj, [initSegment.data])  // data: ArrayBuffer
+    ctx.postMessage(obj, [initSegment.data]) // data: ArrayBuffer
 }
 
 function onMediaSegment(mediaSegment: any) {
@@ -71,7 +80,7 @@ function onMediaSegment(mediaSegment: any) {
         msg: Events.MEDIA_SEGMENT,
         data: mediaSegment
     }
-    ctx.postMessage(obj, [mediaSegment.data])  // data: ArrayBuffer
+    ctx.postMessage(obj, [mediaSegment.data]) // data: ArrayBuffer
 }
 
 function onLoadingComplete() {

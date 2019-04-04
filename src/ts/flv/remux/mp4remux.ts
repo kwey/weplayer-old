@@ -117,18 +117,26 @@ export default class Mp4Remuxer extends Remuxer {
                     if (this._videoSegmentList.isEmpty()) {
                         dtsCorrection = 0
                     } else {
-                        const lastSegment = this._videoSegmentList.getLastSegmentBefore(dts)
+                        const lastSegment = this._videoSegmentList.getLastSegmentBefore(
+                            dts
+                        )
                         if (lastSegment) {
                             let gap
                             const { lastDts, gap: lastGap } = lastSegment
-                            gap = dts - (lastDts + lastGap) > 3 ? dts - (lastDts + lastGap) : 0
+                            gap =
+                                dts - (lastDts + lastGap) > 3
+                                    ? dts - (lastDts + lastGap)
+                                    : 0
                             dtsCorrection = dts - (lastDts + gap)
                         } else {
                             dtsCorrection = 0
                         }
                     }
                 } else {
-                    dtsCorrection = dts - this._videoNextDts >= 1000 ? 0 : dts - this._videoNextDts
+                    dtsCorrection =
+                        dts - this._videoNextDts >= 1000
+                            ? 0
+                            : dts - this._videoNextDts
                 }
             }
             const originDts = dts
@@ -159,9 +167,11 @@ export default class Mp4Remuxer extends Remuxer {
                 const nextDts = samples[0].dts - this._dtsBase - dtsCorrection
                 sampleDuration = nextDts - dts
             } else {
-                if (mp4Samples.length >= 1) { // lastest sample, use second last duration
+                if (mp4Samples.length >= 1) {
+                    // lastest sample, use second last duration
                     sampleDuration = mp4Samples[mp4Samples.length - 1].duration
-                } else { // the only one sample, use reference duration
+                } else {
+                    // the only one sample, use reference duration
                     sampleDuration = this._videoMeta.refSampleDuration
                 }
             }
@@ -273,26 +283,38 @@ export default class Mp4Remuxer extends Remuxer {
                     if (this._audioSegmentList.isEmpty()) {
                         dtsCorrection = 0
                     } else {
-                        const lastSegment = this._audioSegmentList.getLastSegmentBefore(dts)
+                        const lastSegment = this._audioSegmentList.getLastSegmentBefore(
+                            dts
+                        )
                         if (lastSegment) {
                             let gap
                             const { lastDts, gap: lastGap } = lastSegment
-                            gap = dts - (lastDts + lastGap) > 3 ? dts - (lastDts + lastGap) : 0
+                            gap =
+                                dts - (lastDts + lastGap) > 3
+                                    ? dts - (lastDts + lastGap)
+                                    : 0
                             dtsCorrection = dts - (lastDts + gap)
                         } else {
-                            needSilentFrame = this._fillSilenceFrame && !this._videoSegmentList.isEmpty()
+                            needSilentFrame =
+                                this._fillSilenceFrame &&
+                                !this._videoSegmentList.isEmpty()
                             dtsCorrection = 0
                         }
                     }
                 } else {
-                    dtsCorrection = dts - this._audioNextDts >= 1000 ? 0 : dts - this._audioNextDts
+                    dtsCorrection =
+                        dts - this._audioNextDts >= 1000
+                            ? 0
+                            : dts - this._audioNextDts
                 }
             }
             const originDts = dts
             dts -= dtsCorrection
 
             if (needSilentFrame) {
-                const videoSegment = this._videoSegmentList.getLastSampleBefore(originDts)
+                const videoSegment = this._videoSegmentList.getLastSampleBefore(
+                    originDts
+                )
 
                 if (videoSegment && videoSegment.startDts < dts) {
                     silentDuration = dts - videoSegment.startDts
@@ -331,9 +353,11 @@ export default class Mp4Remuxer extends Remuxer {
                 const nextDts = samples[0].dts - this._dtsBase - dtsCorrection
                 sampleDuration = nextDts - dts
             } else {
-                if (mp4Samples.length >= 1) { // use second last sample duration
+                if (mp4Samples.length >= 1) {
+                    // use second last sample duration
                     sampleDuration = mp4Samples[mp4Samples.length - 1].duration
-                } else { // the only one sample, use reference sample duration
+                } else {
+                    // the only one sample, use reference sample duration
                     sampleDuration = this._audioMeta.refSampleDuration
                 }
             }
@@ -424,15 +448,107 @@ export default class Mp4Remuxer extends Remuxer {
         if (channelCount === 1) {
             return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x23, 0x80])
         } else if (channelCount === 2) {
-            return new Uint8Array([0x21, 0x00, 0x49, 0x90, 0x02, 0x19, 0x00, 0x23, 0x80])
+            return new Uint8Array([
+                0x21,
+                0x00,
+                0x49,
+                0x90,
+                0x02,
+                0x19,
+                0x00,
+                0x23,
+                0x80
+            ])
         } else if (channelCount === 3) {
-            return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x20, 0x84, 0x01, 0x26, 0x40, 0x08, 0x64, 0x00, 0x8e])
+            return new Uint8Array([
+                0x00,
+                0xc8,
+                0x00,
+                0x80,
+                0x20,
+                0x84,
+                0x01,
+                0x26,
+                0x40,
+                0x08,
+                0x64,
+                0x00,
+                0x8e
+            ])
         } else if (channelCount === 4) {
-            return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x20, 0x84, 0x01, 0x26, 0x40, 0x08, 0x64, 0x00, 0x80, 0x2c, 0x80, 0x08, 0x02, 0x38])
+            return new Uint8Array([
+                0x00,
+                0xc8,
+                0x00,
+                0x80,
+                0x20,
+                0x84,
+                0x01,
+                0x26,
+                0x40,
+                0x08,
+                0x64,
+                0x00,
+                0x80,
+                0x2c,
+                0x80,
+                0x08,
+                0x02,
+                0x38
+            ])
         } else if (channelCount === 5) {
-            return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x20, 0x84, 0x01, 0x26, 0x40, 0x08, 0x64, 0x00, 0x82, 0x30, 0x04, 0x99, 0x00, 0x21, 0x90, 0x02, 0x38])
+            return new Uint8Array([
+                0x00,
+                0xc8,
+                0x00,
+                0x80,
+                0x20,
+                0x84,
+                0x01,
+                0x26,
+                0x40,
+                0x08,
+                0x64,
+                0x00,
+                0x82,
+                0x30,
+                0x04,
+                0x99,
+                0x00,
+                0x21,
+                0x90,
+                0x02,
+                0x38
+            ])
         } else if (channelCount === 6) {
-            return new Uint8Array([0x00, 0xc8, 0x00, 0x80, 0x20, 0x84, 0x01, 0x26, 0x40, 0x08, 0x64, 0x00, 0x82, 0x30, 0x04, 0x99, 0x00, 0x21, 0x90, 0x02, 0x00, 0xb2, 0x00, 0x20, 0x08, 0xe0])
+            return new Uint8Array([
+                0x00,
+                0xc8,
+                0x00,
+                0x80,
+                0x20,
+                0x84,
+                0x01,
+                0x26,
+                0x40,
+                0x08,
+                0x64,
+                0x00,
+                0x82,
+                0x30,
+                0x04,
+                0x99,
+                0x00,
+                0x21,
+                0x90,
+                0x02,
+                0x00,
+                0xb2,
+                0x00,
+                0x20,
+                0x08,
+                0xe0
+            ])
         }
         return null
     }

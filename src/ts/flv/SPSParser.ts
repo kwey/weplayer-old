@@ -1,7 +1,7 @@
 import ExpGolomb from '../utils/expGolomb'
 
 export default class SPSParser {
-    static getProfileStr (profileIdc: any) {
+    static getProfileStr(profileIdc: any) {
         switch (profileIdc) {
             case 66:
                 return 'Baseline'
@@ -22,11 +22,11 @@ export default class SPSParser {
         }
     }
 
-    static getLevelStr (levelIdc: any) {
+    static getLevelStr(levelIdc: any) {
         return (levelIdc / 10).toFixed(1)
     }
 
-    static getChromaFormatStr (chroma: any) {
+    static getChromaFormatStr(chroma: any) {
         switch (chroma) {
             case 420:
                 return '4:2:0'
@@ -43,8 +43,7 @@ export default class SPSParser {
      * read SPS
      *  originArr
      */
-    static parseSPS (originArr: any) {
-
+    static parseSPS(originArr: any) {
         const rbsp = SPSParser._ebsp2rbsp(originArr)
 
         const stream = new ExpGolomb(rbsp)
@@ -52,20 +51,26 @@ export default class SPSParser {
         const { chromaFormat, levelIdc, profileIdc } = spsConfig
         spsConfig.profileString = SPSParser.getProfileStr(profileIdc)
         spsConfig.levelString = SPSParser.getLevelStr(levelIdc)
-        spsConfig.chromaFormatString = SPSParser.getChromaFormatStr(chromaFormat)
+        spsConfig.chromaFormatString = SPSParser.getChromaFormatStr(
+            chromaFormat
+        )
 
         return spsConfig
-
     }
 
     //
-    static _ebsp2rbsp (originArr: any) {
-        const originLen =  originArr.byteLength
+    static _ebsp2rbsp(originArr: any) {
+        const originLen = originArr.byteLength
         const dist = new Uint8Array(originArr.byteLength)
         let distSize = 0
 
         for (let i = 0, len = originLen; i < len; i++) {
-            if (i > 2 && originArr[i] === 3 && originArr[i - 1] === 0 && originArr[i - 2] === 0) {
+            if (
+                i > 2 &&
+                originArr[i] === 3 &&
+                originArr[i - 1] === 0 &&
+                originArr[i - 2] === 0
+            ) {
                 continue
             }
             dist[distSize++] = originArr[i]

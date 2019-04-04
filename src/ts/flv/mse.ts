@@ -13,12 +13,18 @@ class MSE extends EventEmitter {
     sourceBuffer: any
     handleSourceOpen: any
 
-    constructor(config: ConfigInterface, codecs = 'video/mp4; codecs="avc1.64001E, mp4a.40.5"') {
+    constructor(
+        config: ConfigInterface,
+        codecs = 'video/mp4; codecs="avc1.64001E, mp4a.40.5"'
+    ) {
         super()
         this.config = config
         this.count = count++
         this.codecs = codecs
-        if ('MediaSource' in window && MediaSource.isTypeSupported(this.codecs)) {
+        if (
+            'MediaSource' in window &&
+            MediaSource.isTypeSupported(this.codecs)
+        ) {
             this.mediaSource = new window.MediaSource()
             this.url = window.URL.createObjectURL(this.mediaSource)
             this.handleSourceOpen = this.onSourceOpen.bind(this)
@@ -29,7 +35,10 @@ class MSE extends EventEmitter {
         }
     }
     globalEvents() {
-        this.mediaSource.addEventListener(MseEvents.SOURCE_OPEN, this.handleSourceOpen)
+        this.mediaSource.addEventListener(
+            MseEvents.SOURCE_OPEN,
+            this.handleSourceOpen
+        )
         this.mediaSource.addEventListener(MseEvents.SOURCE_CLOSE, () => {
             this.emit(MseEvents.SOURCE_CLOSE)
         })
@@ -68,7 +77,9 @@ class MSE extends EventEmitter {
             if (this.state === 'closed') {
                 this.emit(Events.ERROR, {
                     type: 'sourceBuffer',
-                    error: new Error('mediaSource is not attached to video or mediaSource is closed')
+                    error: new Error(
+                        'mediaSource is not attached to video or mediaSource is closed'
+                    )
                 })
             } else if (this.state === 'ended') {
                 this.emit(Events.ERROR, {
@@ -87,7 +98,10 @@ class MSE extends EventEmitter {
         }
     }
     destroy() {
-        this.mediaSource.removeEventListener(MseEvents.SOURCE_OPEN, this.handleSourceOpen)
+        this.mediaSource.removeEventListener(
+            MseEvents.SOURCE_OPEN,
+            this.handleSourceOpen
+        )
         this.destroy()
         this.mediaSource = null
         this.endOfStream()

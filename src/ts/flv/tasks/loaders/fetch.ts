@@ -1,5 +1,3 @@
-
-
 export default class FetchLoader {
     url: any
     on: any
@@ -31,21 +29,26 @@ export default class FetchLoader {
             return fetch(url, {
                 ..._config,
                 ...config
-            }).then((res: any) => {
-                if (res.status > 299 || res.status < 200 || !res.ok) {
-                    this.complete = true
-                    return Promise.reject(new Error(`url ${res.status} ${res.statusText}`))
-                }
-                return Promise.resolve(res)
-            }).then(res => res.arrayBuffer()).then(buffer => {
-                this.complete = true
-                this.byteLength = buffer.byteLength
-                if (this.isStopped) return {}
-                return {
-                    buffer,
-                    timeStamp: this.timeStamp
-                }
             })
+                .then((res: any) => {
+                    if (res.status > 299 || res.status < 200 || !res.ok) {
+                        this.complete = true
+                        return Promise.reject(
+                            new Error(`url ${res.status} ${res.statusText}`)
+                        )
+                    }
+                    return Promise.resolve(res)
+                })
+                .then(res => res.arrayBuffer())
+                .then(buffer => {
+                    this.complete = true
+                    this.byteLength = buffer.byteLength
+                    if (this.isStopped) return {}
+                    return {
+                        buffer,
+                        timeStamp: this.timeStamp
+                    }
+                })
         }
     }
 

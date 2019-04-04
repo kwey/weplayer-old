@@ -3,10 +3,10 @@ import Utils from '../utils/utils'
 class Buffer {
     buffer: any
 
-    constructor (buffer?: any) {
+    constructor(buffer?: any) {
         this.buffer = buffer || new Uint8Array(0)
     }
-    write (...buffer: any) {
+    write(...buffer: any) {
         buffer.forEach((item: any) => {
             if (item) {
                 this.buffer = Utils.concatTypedArray(Uint8Array, this.buffer, item)
@@ -15,17 +15,17 @@ class Buffer {
             }
         })
     }
-    static writeUint32 (value: any) {
+    static writeUint32(value: any) {
         return new Uint8Array([
             value >> 24,
             (value >> 16) & 0xff,
             (value >> 8) & 0xff,
-            value & 0xff,
+            value & 0xff
         ])
     }
-    static readAsInt (arr: any) {
+    static readAsInt(arr: any) {
         let temp = ''
-        function padStart4Hex (hexNum: any) {
+        function padStart4Hex(hexNum: any) {
             const hexStr = hexNum.toString(16)
             return ('00' + hexStr).slice(-2)
         }

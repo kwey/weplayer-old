@@ -1,4 +1,3 @@
-
 import { ConfigInterface } from '../..'
 import Mse from './mse'
 import { VideoEvents } from './events'
@@ -38,7 +37,6 @@ class Video extends Mse {
         this._mediaElement.src = this.url
         container.appendChild(this._mediaElement)
         this.mediaEvents()
-
     }
     mediaEvents() {
         const timeUpdate = this.timeUpdate()
@@ -67,8 +65,7 @@ class Video extends Mse {
             })
         })
     }
-    destroy() {
-    }
+    destroy() {}
     canPlay(e: any) {
         if (this.config.autoplay) {
             const video = this._mediaElement.play()
@@ -97,7 +94,9 @@ class Video extends Mse {
         if (!this.seekable) {
             return
         }
-        this.emit(VideoEvents.SEEKING, { seektTime: this._mediaElement.currentTime })
+        this.emit(VideoEvents.SEEKING, {
+            seektTime: this._mediaElement.currentTime
+        })
         this.isSeeking = true
     }
     isBuffered(cahedTime: number = 0) {
@@ -105,7 +104,10 @@ class Video extends Mse {
         let isBuffered = false
         if (buffered.length) {
             for (let i = 0, len = buffered.length; i < len; i++) {
-                if (currentTime > buffered.start(i) && currentTime + cahedTime < buffered.end(i)) {
+                if (
+                    currentTime > buffered.start(i) &&
+                    currentTime + cahedTime < buffered.end(i)
+                ) {
                     isBuffered = true
                     break
                 }
@@ -174,19 +176,24 @@ class Video extends Mse {
         if (!err) {
             return null
         }
-        const status = [{
-            en: 'MEDIA_ERR_ABORTED',
-            cn: '取回过程被用户中止'
-        }, {
-            en: 'MEDIA_ERR_NETWORK',
-            cn: '当下载时发生错误'
-        }, {
-            en: 'MEDIA_ERR_DECODE',
-            cn: '当解码时发生错误'
-        }, {
-            en: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
-            cn: '不支持音频/视频'
-        }]
+        const status = [
+            {
+                en: 'MEDIA_ERR_ABORTED',
+                cn: '取回过程被用户中止'
+            },
+            {
+                en: 'MEDIA_ERR_NETWORK',
+                cn: '当下载时发生错误'
+            },
+            {
+                en: 'MEDIA_ERR_DECODE',
+                cn: '当解码时发生错误'
+            },
+            {
+                en: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
+                cn: '不支持音频/视频'
+            }
+        ]
         return status[err.code - 1].en
     }
     get loop() {
@@ -202,19 +209,24 @@ class Video extends Mse {
         this._mediaElement.muted = isTrue
     }
     get networkState() {
-        const status = [{
-            en: 'NETWORK_EMPTY',
-            cn: '音频/视频尚未初始化'
-        }, {
-            en: 'NETWORK_IDLE',
-            cn: '音频/视频是活动的且已选取资源，但并未使用网络'
-        }, {
-            en: 'NETWORK_LOADING',
-            cn: '浏览器正在下载数据'
-        }, {
-            en: 'NETWORK_NO_SOURCE',
-            cn: '未找到音频/视频来源'
-        }]
+        const status = [
+            {
+                en: 'NETWORK_EMPTY',
+                cn: '音频/视频尚未初始化'
+            },
+            {
+                en: 'NETWORK_IDLE',
+                cn: '音频/视频是活动的且已选取资源，但并未使用网络'
+            },
+            {
+                en: 'NETWORK_LOADING',
+                cn: '浏览器正在下载数据'
+            },
+            {
+                en: 'NETWORK_NO_SOURCE',
+                cn: '未找到音频/视频来源'
+            }
+        ]
         return status[this._mediaElement.networkState].en
     }
     get paused() {
@@ -236,22 +248,29 @@ class Video extends Mse {
         this._mediaElement.preload = isTrue
     }
     get readyState() {
-        const status = [{
-            en: 'HAVE_NOTHING',
-            cn: '没有关于音频/视频是否就绪的信息'
-        }, {
-            en: 'HAVE_METADATA',
-            cn: '关于音频/视频就绪的元数据'
-        }, {
-            en: 'HAVE_CURRENT_DATA',
-            cn: '关于当前播放位置的数据是可用的，但没有足够的数据来播放下一帧/毫秒'
-        }, {
-            en: 'HAVE_FUTURE_DATA',
-            cn: '当前及至少下一帧的数据是可用的'
-        }, {
-            en: 'HAVE_ENOUGH_DATA',
-            cn: '可用数据足以开始播放'
-        }]
+        const status = [
+            {
+                en: 'HAVE_NOTHING',
+                cn: '没有关于音频/视频是否就绪的信息'
+            },
+            {
+                en: 'HAVE_METADATA',
+                cn: '关于音频/视频就绪的元数据'
+            },
+            {
+                en: 'HAVE_CURRENT_DATA',
+                cn:
+                    '关于当前播放位置的数据是可用的，但没有足够的数据来播放下一帧/毫秒'
+            },
+            {
+                en: 'HAVE_FUTURE_DATA',
+                cn: '当前及至少下一帧的数据是可用的'
+            },
+            {
+                en: 'HAVE_ENOUGH_DATA',
+                cn: '可用数据足以开始播放'
+            }
+        ]
         return status[this._mediaElement.readyState]
     }
     get seekable() {

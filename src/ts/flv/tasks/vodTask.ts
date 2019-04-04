@@ -46,7 +46,7 @@ class VodTask {
     }
 
     update() {
-        const sended = queue.filter((item) => item.on)
+        const sended = queue.filter(item => item.on)
         const wait = queue.filter(item => !item.on)
         const max = limit - sended.length
         wait.forEach((item, idx) => {

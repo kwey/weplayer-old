@@ -1,14 +1,17 @@
-
 export const debounce = (func: Function, wait: number, immediate: boolean) => {
     let timeout: number
     let result: number
 
     const debounced = () => {
-        if (timeout) { clearTimeout(timeout) }
+        if (timeout) {
+            clearTimeout(timeout)
+        }
         if (immediate) {
             const callNow = !timeout
             timeout = setTimeout(func, wait)
-            if (callNow) { result = func() }
+            if (callNow) {
+                result = func()
+            }
         } else {
             timeout = setTimeout(func, wait)
         }

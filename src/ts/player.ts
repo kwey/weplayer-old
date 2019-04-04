@@ -1,4 +1,3 @@
-
 import { ConfigInterface } from '..'
 import Controller from './controller/controller'
 import FlvPlayer from './flv/flv'
@@ -34,8 +33,7 @@ class Player extends EventEmitter {
         this.flvPlayer = new FlvPlayer(this.config)
         // this.controller = new Controller({})
     }
-    globalEvents() {
-    }
+    globalEvents() {}
 }
 
 export default Player

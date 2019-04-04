@@ -1,5 +1,3 @@
-
-
 export default class WebSocketLoader {
     url: string
     _sendData: any
@@ -7,7 +5,7 @@ export default class WebSocketLoader {
     _ws: any
     header: any
 
-    constructor (url: string, callback: Function, header?: any) {
+    constructor(url: string, callback: Function, header?: any) {
         this.header = header
         this.url = url
         this._sendData = callback
@@ -15,7 +13,7 @@ export default class WebSocketLoader {
         this._ws = null
     }
 
-    initWsObj () {
+    initWsObj() {
         const ws = new WebSocket(this.url)
         ws.binaryType = 'arraybuffer'
         ws.onopen = this._onOpen.bind(this)
@@ -24,7 +22,7 @@ export default class WebSocketLoader {
         // ws.onerror = this._onError.bind(this)
     }
 
-    _onOpen () {
+    _onOpen() {
         this.on = true
     }
 
@@ -32,7 +30,7 @@ export default class WebSocketLoader {
         this._sendData()
     }
 
-    _onMessage (result: any = {}) {
+    _onMessage(result: any = {}) {
         const { data } = result
         if (data instanceof ArrayBuffer) {
             this._sendData(data)
@@ -45,20 +43,19 @@ export default class WebSocketLoader {
         }
     }
 
-    run () {
+    run() {
         this._ws = this.initWsObj()
     }
 
-    cancel () {
+    cancel() {
         if (this.isCancelAble) {
             this._ws.close()
             this._ws = null
         }
     }
 
-    get isCancelAble () {
+    get isCancelAble() {
         const { _ws: ws } = this
         return ws && ws.readyState === 0 && ws.readyState === 1
     }
-
 }

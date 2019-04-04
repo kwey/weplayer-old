@@ -2,7 +2,7 @@ class Stream {
     buffer: any
     dataview: any
 
-    constructor (buffer: any) {
+    constructor(buffer: any) {
         this.buffer = buffer
         this.dataview = new DataView(buffer)
         this.dataview.position = 0
@@ -41,11 +41,11 @@ class Stream {
             case 3:
                 if (sign) {
                     for (let i = 0; i < 3; i++) {
-                        buffer.setInt8(buffer.position + i, value >> (16 - i * 8) & 0xff)
+                        buffer.setInt8(buffer.position + i, (value >> (16 - i * 8)) & 0xff)
                     }
                 } else {
                     for (let i = 0; i < 3; i++) {
-                        buffer.setUint8(buffer.position + i, value >> (16 - i * 8) & 0xff)
+                        buffer.setUint8(buffer.position + i, (value >> (16 - i * 8)) & 0xff)
                     }
                 }
                 break
@@ -87,8 +87,8 @@ class Stream {
         Stream.writeByte(this.dataview, value, 4, true)
     }
     writeUint64(value: any) {
-        Stream.writeByte(this.dataview, (value & 0xFFFFFFFF00000000) >> 32, 4)
-        Stream.writeByte(this.dataview, (value & 0x00000000FFFFFFFF), 4)
+        Stream.writeByte(this.dataview, (value & 0xffffffff00000000) >> 32, 4)
+        Stream.writeByte(this.dataview, value & 0x00000000ffffffff, 4)
     }
     writeStr(value: any) {
         const values = value.toString()

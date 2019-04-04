@@ -1,5 +1,3 @@
-
-
 export const Events = {
     IO_ERROR: 'io_error',
     DEMUX_ERROR: 'demux_error',
@@ -20,12 +18,12 @@ export const ReadyEvents = {
     META_DATA_READY: 'meta_data_ready',
     TRACK_META_READY: 'track_meta_ready',
     MEDIA_INFO_READY: 'media_info_ready',
-    META_END_POSITION: 'meta_end_position',
+    META_END_POSITION: 'meta_end_position'
 }
 export const MseEvents = {
     SOURCE_OPEN: 'sourceopen',
     SOURCE_CLOSE: 'sourceclose',
-    UPDATE_END: 'updateend',
+    UPDATE_END: 'updateend'
 }
 export const VideoEvents = {
     PLAY: 'play',
@@ -43,5 +41,5 @@ export const VideoEvents = {
     LOADED_DATA: 'loadeddata'
 }
 export const WorkerEvents = {
-    INIT: 'init',
+    INIT: 'init'
 }
