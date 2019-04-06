@@ -9,7 +9,7 @@
     },
     "scripts": {
         "prebuild": "rm -rf dist",
-        "build": "webpack --env.gcc & npm run cp",
+        "build": "webpack --env.gcc && npm run cp",
         "debug": "webpack --env.dev",
         "dev": "webpack-dev-server --env.dev",
         "cp": "./push.sh"
