@@ -9,9 +9,10 @@
     },
     "scripts": {
         "prebuild": "rm -rf dist",
-        "build": "webpack --env.gcc",
+        "build": "webpack --env.gcc & npm run cp",
         "debug": "webpack --env.dev",
-        "dev": "webpack-dev-server --env.dev"
+        "dev": "webpack-dev-server --env.dev",
+        "cp": "./push.sh"
     },
     "author": "kwe",
     "license": "ISC",
