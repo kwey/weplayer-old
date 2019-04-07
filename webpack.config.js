@@ -23,7 +23,7 @@ module.exports = (env = {}) => {
         output: {
             path: path.resolve(__dirname, 'dist/'),
             filename: '[name].js',
-            library: 'WEPlayer',
+            // library: 'WEPlayer',
             libraryTarget: 'umd',
             umdNamedDefine: true
         },

@@ -30,4 +30,4 @@ class WEPlayer {
     }
 }
 
-export default WEPlayer
+export { WEPlayer }

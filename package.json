@@ -1,11 +1,11 @@
 {
-    "name": "wePlayer",
+    "name": "weplayer",
     "version": "0.0.0",
     "description": "",
     "main": "index.js",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/KWEY/zero.git"
+        "url": "git+https://github.com/KWEY/weplayer.git"
     },
     "scripts": {
         "prebuild": "rm -rf dist",
@@ -23,9 +23,9 @@
         "not ie <= 8"
     ],
     "bugs": {
-        "url": "https://github.com/KWEY/zero/issues"
+        "url": "https://github.com/KWEY/weplayer/issues"
     },
-    "homepage": "https://github.com/KWEY/zero#readme",
+    "homepage": "https://github.com/KWEY/weplayer#readme",
     "dependencies": {
         "concat-typed-array": "^1.0.2",
         "promise-polyfill": "^8.1.0"
